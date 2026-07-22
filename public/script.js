@@ -17,10 +17,19 @@ function displayOneTask(task){
 
         <div class="right">
             <button class="edit">Edit</button>
-            <button class="update">Upd</button>
             <button class="delete">Del</button>
         </div>
     `;
+
+    const editBtn = div.querySelector(".edit");
+
+    editBtn.addEventListener("click", () => {
+        const newName = prompt("Enter new task name:", task.name);
+
+        if (!newName) return;
+
+        updateTask(task._id, newName);
+    });
 
     taskList.appendChild(div);
 }
@@ -70,5 +79,27 @@ async function addTask(){
         console.error("Error Posting data");
     }
 }
+
+async function updateTask(id, name) {
+    try {
+        const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name })
+        });
+
+        if (!response.ok) {
+            throw new Error("Update failed");
+        }
+
+        loadTasks();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 
 loadTasks();
