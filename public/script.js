@@ -2,6 +2,21 @@ const button = document.getElementById("add-btn");
 
 button.addEventListener("click", addTask)
 
+let count = 0;
+
+function increaseCount() {
+    count++;
+    document.getElementById("count").textContent = count;
+}
+
+function decreaseCount() {
+    count--;
+    document.getElementById("count").textContent = count;
+}
+
+function updateCount() {
+    document.getElementById("count").textContent = count;
+}
 
 function displayOneTask(task){
     const taskList = document.getElementById("task-list");
@@ -35,7 +50,6 @@ function displayOneTask(task){
 
     deleteBtn.addEventListener("click", () => {
         deleteTask(task._id);
-        loadTasks();
     })
 
     taskList.appendChild(div);
@@ -50,13 +64,16 @@ async function loadTasks() {
         const response = await fetch("http://localhost:3000/tasks");
         const result = await response.json();
 
-        console.log(result);
-
         taskList.innerHTML = "";
 
         result.tasks.forEach(task => {
             displayOneTask(task);
         });
+
+        // Update count
+        count = result.tasks.length;
+        updateCount();
+
     } catch (error) {
         console.log(error);
     }
@@ -78,8 +95,7 @@ async function addTask(){
             throw new Error ("Failed to add data");
         }
 
-         input.value = ""
-
+        input.value = "";
         loadTasks();
 
     } catch (error) {
@@ -117,10 +133,10 @@ async function deleteTask(id){
 
         const result = await response.json();
 
-        if(response.ok){
-            alert("Note deleted successfully!");
-        }
-        else{
+        if (response.ok) {
+             alert("Task deleted successfully!");
+            loadTasks();
+        } else {
             alert(result.message);
         }
     } catch (error) {
