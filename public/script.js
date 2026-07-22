@@ -31,6 +31,13 @@ function displayOneTask(task){
         updateTask(task._id, newName);
     });
 
+    const deleteBtn = div.querySelector(".delete");
+
+    deleteBtn.addEventListener("click", () => {
+        deleteTask(task._id);
+        loadTasks();
+    })
+
     taskList.appendChild(div);
 }
 
@@ -100,6 +107,25 @@ async function updateTask(id, name) {
     }
 }
 
+async function deleteTask(id){
+    const deleted = document.getElementsByClassName("delete").value;
 
+    try {
+        const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+            method: "DELETE"
+        });
+
+        const result = await response.json();
+
+        if(response.ok){
+            alert("Note deleted successfully!");
+        }
+        else{
+            alert(result.message);
+        }
+    } catch (error) {
+        console.error("Error deleting note:", error);
+    }
+}
 
 loadTasks();
