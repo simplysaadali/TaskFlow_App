@@ -8,16 +8,10 @@ const Task = require("./app/models/tasks");
 const server = express();
 
 server.use(express.json());
-server.use(express.static("public"));
-server.use(cors());
+server.use(express.static("public")); //does the public folder to use and connection
+server.use(cors()); //allows multiple ports, or protocol to urn this code, 3000 or 5000, doesn't blocks
 
 connectDB();
-
-server.get("/" , (req, res) => {
-    console.log("Name, MongoDb");
-    res.send("Hello, World!");
-    
-});
 
 server.get("/tasks", async (req, res) => {
     const tasks = await Task.find();
