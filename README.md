@@ -1,98 +1,122 @@
-# TaskFlow App
+# TaskFlow
 
-TaskFlow App is a simple task management application that allows users to create, view, update, and delete tasks through a web interface. The project uses Node.js and Express on the server side, MongoDB for data persistence, and vanilla JavaScript for the client.
+> A focused task manager with a calm interface, a lightweight API, and MongoDB persistence.
 
-## Features
+<p align="center">
+	<img src="https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js 18 or newer">
+	<img src="https://img.shields.io/badge/Express-5-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express 5">
+	<img src="https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB with Mongoose">
+	<img src="https://img.shields.io/badge/Frontend-Vanilla%20JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=111111" alt="Vanilla JavaScript frontend">
+</p>
 
-- Add new tasks
-- View all tasks in a list
-- Edit existing tasks
-- Delete tasks
-- Track the total number of tasks
-- Persist task data in MongoDB
+TaskFlow keeps the everyday task loop simple: add an item, see it immediately, refine it when plans change, and remove it when it is done. The browser UI talks to an Express server, which stores tasks in MongoDB through Mongoose.
 
-## Technology Stack
+## What It Does
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: Node.js, Express.js
-- Database: MongoDB with Mongoose
-- Development Tool: Nodemon
+| Capability | Description |
+| --- | --- |
+| Create | Add a new task from the browser |
+| Read | Load every saved task from the API |
+| Update | Rename an existing task in place |
+| Delete | Remove a task and refresh the list |
+| Count | Show the current number of saved tasks |
+| Persist | Keep task data in MongoDB between sessions |
 
-## Project Structure
+## How It Fits Together
 
-```text
-TaskFlow_App/
-├── app/
-│   ├── config/
-│   │   └── db.js
-│   └── models/
-│       └── tasks.js
-├── public/
-│   ├── index.html
-│   ├── script.js
-│   └── style.css
-├── package.json
-├── server.js
-└── README.md
+```mermaid
+flowchart LR
+		Browser[Browser UI\nHTML + CSS + JavaScript] -->|fetch| API[Express API\n/tasks]
+		API -->|Mongoose| DB[(MongoDB)]
+		DB -->|task records| API
+		API -->|JSON responses| Browser
 ```
 
-## Prerequisites
+## Quick Start
 
-Before you begin, make sure you have the following installed:
+### Prerequisites
 
-- Node.js (v18 or newer recommended)
+- Node.js 18 or newer
 - npm
-- A MongoDB instance or MongoDB Atlas connection string
+- A local MongoDB server or a MongoDB Atlas database
 
-## Installation
-
-1. Clone the repository:
+### Install
 
 ```bash
 git clone <repository-url>
 cd TaskFlow_App
-```
-
-2. Install dependencies:
-
-```bash
 npm install
 ```
 
-3. Create a `.env` file in the project root with the following values:
+Create a `.env` file in the project root:
 
 ```env
 PORT=3000
 DB_URL=mongodb://127.0.0.1:27017/taskflow
 ```
 
-Replace the `DB_URL` value with your own MongoDB connection string if needed.
+Use your MongoDB Atlas connection string instead when working with a hosted database.
 
-## Running the Application
-
-Start the development server with:
+### Run
 
 ```bash
 npm run dev
 ```
 
-The application will be available at:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-```text
-http://localhost:3000
+## API Reference
+
+All endpoints return JSON. The task model currently stores a required `name` field.
+
+| Method | Endpoint | Purpose | Body |
+| --- | --- | --- | --- |
+| `GET` | `/tasks` | List all tasks | None |
+| `POST` | `/tasks` | Create a task | `{ "name": "Plan the week" }` |
+| `PUT` | `/tasks/:id` | Rename a task | `{ "name": "Plan the month" }` |
+| `DELETE` | `/tasks/:id` | Delete a task | None |
+
+Example request:
+
+```bash
+curl -X POST http://localhost:3000/tasks \
+	-H "Content-Type: application/json" \
+	-d '{"name":"Review project notes"}'
 ```
 
-## API Endpoints
+## Project Map
 
-The server exposes the following API routes:
+```text
+TaskFlow_App/
+├── app/
+│   ├── config/db.js       # MongoDB connection
+│   └── models/tasks.js     # Mongoose task schema
+├── public/
+│   ├── index.html          # App shell
+│   ├── script.js           # API calls and UI behavior
+│   └── style.css           # Interface styling
+├── .env                   # Local configuration (ignored)
+├── package.json           # Scripts and dependencies
+├── package-lock.json       # Locked dependency versions
+├── server.js              # Express server and routes
+└── README.md
+```
 
-- `GET /tasks` - Retrieve all tasks
-- `POST /tasks` - Create a new task
-- `PUT /tasks/:id` - Update an existing task
-- `DELETE /tasks/:id` - Delete a task
+## Available Commands
 
-## Notes
+| Command | What it does |
+| --- | --- |
+| `npm install` | Installs dependencies |
+| `npm run dev` | Starts the server with Nodemon |
+| `npm test` | Placeholder test script |
 
-- The frontend files are served from the `public` directory.
-- The backend connects to MongoDB when the server starts.
-- If you want to use a cloud database, update `DB_URL` in the `.env` file accordingly.
+## Roadmap
+
+- Add task completion states
+- Add due dates and filters
+- Add automated API and UI tests
+- Add production configuration and deployment notes
+
+## License
+
+No license has been specified yet.
